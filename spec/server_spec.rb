@@ -26,6 +26,7 @@ describe Server do
       }
       result = double('result', field_names_as: [test])
       allow_any_instance_of(PG::Connection).to receive(:exec).and_return(result)
+
       response = get '/tests'
       json_resp = JSON.parse(response.body)
 
@@ -45,6 +46,25 @@ describe Server do
 
       expect(response.status).to eq(200)
       expect(json_resp.length).to eq(0)
+    end
+  end
+
+  context 'POST /import' do
+    it 'com sucesso' do
+      file = Rack::Test::UploadedFile.new('./data.csv', 'csv')
+      allow(MedicalTest).to receive(:from_csv).and_return(true)
+
+      response = post '/import', data: file
+
+      expect(response.status).to eq(201)
+    end
+
+    it 'sem arquivo' do
+      allow(MedicalTest).to receive(:from_csv).and_return(false)
+
+      response = post '/import'
+
+      expect(response.status).to eq(500)
     end
   end
 end

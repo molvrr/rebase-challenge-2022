@@ -1,4 +1,5 @@
 require './server'
+require './medicaltest'
 require 'rack/test'
 
 RSpec.configure do |config|
