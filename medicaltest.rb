@@ -40,6 +40,32 @@ class MedicalTest
     }.to_json(s)
   end
 
+  def self.find_all(token)
+    conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
+    rows = conn.exec_params('SELECT * FROM tests WHERE result_token = $1', [token]).field_names_as(:symbol)
+    tests = []
+    rows.each do |row|
+      tests << MedicalTest.new(row, conn)
+    end
+
+    if rows.ntuples > 0
+      {
+        result_token: tests[0].result_token,
+        result_date: tests[0].result_date,
+        cpf: tests[0].cpf,
+        name: tests[0].name,
+        email: tests[0].email,
+        birthdate: tests[0].birthdate,
+        doctor: {
+          crm: tests[0].doctor[:crm],
+          crm_state: tests[0].doctor[:crm_state],
+          name: tests[0].doctor[:name],
+        },
+        tests: tests.map { |t| { type: t.test_type, limits: t.test_limits, result: t.test_result } }
+      }
+    end
+  end
+
   def self.all
     conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
     rows = conn.exec('SELECT * FROM tests').field_names_as(:symbol)

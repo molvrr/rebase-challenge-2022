@@ -24,13 +24,20 @@ class Server < Sinatra::Base
   set :port, 3000
   enable :logging
 
+  get '/tests/:token' do
+    data = MedicalTest.find_all(params['token'])
+    return data.to_json if data
+
+    404
+  end
+
   get '/tests' do
     MedicalTest.all.to_json
   end
 
   post '/import' do
     begin
-      CSVJob.perform_async("#{Time.now.to_i}", request.params['data'][:tempfile].path)
+      CSVJob.perform_async("#{Time.now.to_i}", params['data'][:tempfile].path)
       201
     rescue
       500
