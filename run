@@ -7,5 +7,6 @@ docker run \
   -v $(pwd):/app \
   -v rubygems:/usr/local/bundle/ \
   -p 3000:3000 \
+  --name rubinho \
   ruby \
   bash -c "ruby server.rb"

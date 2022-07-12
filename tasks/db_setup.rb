@@ -11,6 +11,6 @@ conn.exec('CREATE TABLE tests (id SERIAL PRIMARY KEY, cpf TEXT, name TEXT, email
 
 rows = CSV.read('./data.csv', col_sep: ';', headers: true, header_converters: :symbol)
 rows.each do |row|
-  conn.exec_params("INSERT INTO tests (cpf, name, email, birthdate, address, city, state, doctor_crm, doctor_crm_state, doctor_name, doctor_email, result_token, result_date, test_type, test_limits, test_result) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)", [row[:cpf], row[:nome_paciente], row[:email_paciente], row[:data_nascimento_paciente], row[:endereorua_paciente], row[:cidade_paciente], row[:estado], row[:crm_mdico], row[:crm_mdico_estado], row[:nome_mdico], row[:email_mdico], row[:token_resultado_exame], row[:data_exame], row[:tipo_exame], row[:limites_tipo_exame], row[:resultado_tipo_exame]])
+  conn.exec_params("INSERT INTO tests (cpf, name, email, birthdate, address, city, state, doctor_crm, doctor_crm_state, doctor_name, doctor_email, result_token, result_date, test_type, test_limits, test_result) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)", [row[:cpf], row[:nome_paciente], row[:email_paciente], row[:data_nascimento_paciente], row[:endereorua_paciente], row[:cidade_paciente], row[:estado_patiente], row[:crm_mdico], row[:crm_mdico_estado], row[:nome_mdico], row[:email_mdico], row[:token_resultado_exame], row[:data_exame], row[:tipo_exame], row[:limites_tipo_exame], row[:resultado_tipo_exame]])
 end
 
