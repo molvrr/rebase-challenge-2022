@@ -5,7 +5,7 @@ describe Server do
 
   context 'GET /tests' do
     it 'retorna todos exames cadastrados' do
-      test = {
+      test = [{
         id: 1,
         cpf: '048.973.170-88',
         name: 'Emilly Batista Neto',
@@ -23,9 +23,8 @@ describe Server do
         test_type: 'hemácias',
         test_limits: '45-52',
         test_result: '97'
-      }
-      result = double('result', field_names_as: [test])
-      allow_any_instance_of(PG::Connection).to receive(:exec).and_return(result)
+      }]
+      allow(MedicalTest).to receive(:all).and_return(test)
 
       response = get '/tests'
       json_resp = JSON.parse(response.body)
@@ -38,8 +37,7 @@ describe Server do
     end
 
     it 'e não há exames cadastrados' do
-      result = double('result', field_names_as: [])
-      allow_any_instance_of(PG::Connection).to receive(:exec).and_return(result)
+      allow(MedicalTest).to receive(:all).and_return([])
 
       response = get '/tests'
       json_resp = JSON.parse(response.body)
