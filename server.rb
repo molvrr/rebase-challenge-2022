@@ -31,11 +31,11 @@ class Server < Sinatra::Base
     404
   end
 
-  get '/tests' do
+  get '/tests/?' do
     MedicalTest.all.to_json
   end
 
-  post '/import' do
+  post '/import/?' do
     begin
       CSVJob.perform_async("#{Time.now.to_i}", params['data'][:tempfile].path)
       201
