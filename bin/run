@@ -5,6 +5,7 @@ docker run \
   --network rebase \
   -w /app \
   -v $(pwd):/app \
+  -v tmp:/tmp \
   -v rubygems:/usr/local/bundle/ \
   -p 3000:3000 \
   --name rubinho \

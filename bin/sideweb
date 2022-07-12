@@ -1,0 +1,12 @@
+#!/bin/bash
+
+docker run \
+  -p 3535:3535 \
+  --name sideweb \
+  --rm \
+  --network rebase \
+  -v $(pwd):/app \
+  -v rubygems:/usr/local/bundle \
+  -w /app \
+  ruby \
+  bash -c "rackup -o 0.0.0.0 -p 3535"

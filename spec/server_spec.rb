@@ -50,7 +50,7 @@ describe Server do
   context 'POST /import' do
     it 'com sucesso' do
       file = Rack::Test::UploadedFile.new('./data.csv', 'csv')
-      allow(MedicalTest).to receive(:from_csv).and_return(true)
+      allow(CSVJob).to receive(:perform_async).and_return(true)
 
       response = post '/import', data: file
 
@@ -58,7 +58,7 @@ describe Server do
     end
 
     it 'sem arquivo' do
-      allow(MedicalTest).to receive(:from_csv).and_return(false)
+      allow(CSVJob).to receive(:perform_async).and_return(true)
 
       response = post '/import'
 
