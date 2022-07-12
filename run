@@ -2,8 +2,9 @@
 
 docker run \
   --rm \
+  --network rebase \
   -w /app \
   -v $(pwd):/app \
   -p 3000:3000 \
   ruby \
-  bash -c "gem install rack sinatra puma && ruby server.rb"
+  bash -c "gem install pg rake rack sinatra puma && rake db_setup && ruby server.rb"

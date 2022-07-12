@@ -1,0 +1,16 @@
+require 'pg'
+require 'csv'
+
+conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
+
+conn.exec('DROP TABLE IF EXISTS tests')
+conn.exec('CREATE TABLE tests (cpf TEXT, name TEXT, email TEXT, birthdate TEXT, address TEXT, city TEXT, state TEXT,
+                               doctor_crm TEXT, doctor_crm_state TEXT, doctor_name TEXT, doctor_email TEXT,
+                               result_token TEXT, result_date TEXT, result_type TEXT, result_type_range TEXT,
+                               result_type_final TEXT)')
+
+rows = CSV.read('./data.csv', col_sep: ';', headers: true, header_converters: :symbol)
+rows.each do |row|
+  conn.exec_params("INSERT INTO tests (cpf, name, email, birthdate, address, city, state, doctor_crm, doctor_crm_state, doctor_name, doctor_email, result_token, result_date, result_type, result_type_range, result_type_final) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)", [row[:cpf], row[:nome_paciente], row[:email_paciente], row[:data_nascimento_paciente], row[:endereorua_paciente], row[:cidade_paciente], row[:estado], row[:crm_mdico], row[:crm_mdico_estado], row[:nome_mdico], row[:email_mdico], row[:token_resultado_exame], row[:data_exame], row[:tipo_exame], row[:limites_tipo_exame], row[:resultado_tipo_exame]])
+end
+
