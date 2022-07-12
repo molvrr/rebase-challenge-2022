@@ -23,6 +23,23 @@ class MedicalTest
     @test_result = data[:test_result]
   end
 
+  def to_json(s)
+    {
+      result_token: @result_token,
+      result_date: @result_date,
+      cpf: @cpf,
+      name: @name,
+      birthdate: @birthdate,
+      address: @address,
+      city: @city,
+      state: @state,
+      doctor: @doctor,
+      test_type: @test_type,
+      test_limits: @test_limits,
+      test_result: @test_result
+    }.to_json(s)
+  end
+
   def self.all
     conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
     rows = conn.exec('SELECT * FROM tests').field_names_as(:symbol)
