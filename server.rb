@@ -1,8 +1,8 @@
 require 'sinatra/base'
 require 'rack/handler/puma'
-require './medicaltest'
 require 'sidekiq'
 require './workers/csv_worker'
+require './medicaltest'
 
 Sidekiq.configure_server do |config|
   config.redis = {
@@ -37,7 +37,10 @@ class Server < Sinatra::Base
 
   post '/import/?' do
     begin
-      CSVJob.perform_async("#{Time.now.to_i}", params['data'][:tempfile].path)
+      path = params['data'][:tempfile].path
+      csv_path = "imports/#{File.basename(path)}"
+      FileUtils.cp(path, csv_path)
+      CSVJob.perform_async(csv_path)
       201
     rescue
       500
