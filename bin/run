@@ -2,6 +2,7 @@
 
 docker run \
   --rm \
+  -d \
   --network rebase \
   -w /app \
   -v $(pwd):/app \
