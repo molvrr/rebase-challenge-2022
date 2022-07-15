@@ -1,0 +1,70 @@
+services:
+  rubinho:
+    container_name: rubinho
+    build:
+      context: .
+      dockerfile: rubinho.Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - rebase
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - db
+  db:
+    container_name: postgres
+    image: postgres:alpine
+    networks:
+      - rebase
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 1234
+  redis:
+    container_name: redis
+    image: redis:alpine
+    networks:
+      - rebase
+  sidekiq:
+    container_name: sidekiq
+    build:
+      context: .
+      dockerfile: sidekiq.Dockerfile
+    networks:
+      - rebase
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - redis
+  sideweb:
+    container_name: sideweb
+    build:
+      context: .
+      dockerfile: sideweb.Dockerfile
+    ports:
+      - "3535:3535"
+    networks:
+      - rebase
+    volumes:
+      - .:/app
+      - rubygems:/usr/local/bundle
+    environment:
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      - sidekiq
+
+
+
+networks:
+  rebase:
+
+volumes:
+  rubygems:
+  pgdata:

@@ -4,20 +4,15 @@ require 'csv'
 namespace :db do
   task :setup do
     conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
-    conn.exec('CREATE TABLE IF NOT EXISTS tests (id SERIAL PRIMARY KEY, cpf TEXT, name TEXT, email TEXT, birthdate TEXT, address TEXT, city TEXT, state TEXT,
-                                   doctor_crm TEXT, doctor_crm_state TEXT, doctor_name TEXT, doctor_email TEXT,
-                                   result_token TEXT, result_date TEXT, test_type TEXT, test_limits TEXT,
-                                   test_result TEXT)')
-    begin
-      conn.exec('CREATE DATABASE tests')
-      conn.close
-    rescue PG::DuplicateDatabase
-      conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres', dbname: 'tests')
-      conn.exec('CREATE TABLE IF NOT EXISTS tests (id SERIAL PRIMARY KEY, cpf TEXT, name TEXT, email TEXT, birthdate TEXT, address TEXT, city TEXT, state TEXT,
-                                   doctor_crm TEXT, doctor_crm_state TEXT, doctor_name TEXT, doctor_email TEXT,
-                                   result_token TEXT, result_date TEXT, test_type TEXT, test_limits TEXT,
-                                   test_result TEXT)')
-    end
+    conn.exec('CREATE TABLE IF NOT EXISTS tests (id SERIAL PRIMARY KEY, cpf TEXT, name TEXT, email TEXT, birthdate TEXT,
+      address TEXT, city TEXT, state TEXT, doctor_crm TEXT, doctor_crm_state TEXT, doctor_name TEXT, doctor_email TEXT,
+      result_token TEXT, result_date TEXT, test_type TEXT, test_limits TEXT, test_result TEXT)')
+    conn.send_query('CREATE DATABASE tests')
+    conn.close
+    conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres', dbname: 'tests')
+    conn.exec('CREATE TABLE IF NOT EXISTS tests (id SERIAL PRIMARY KEY, cpf TEXT, name TEXT, email TEXT, birthdate TEXT,
+      address TEXT, city TEXT, state TEXT, doctor_crm TEXT, doctor_crm_state TEXT, doctor_name TEXT, doctor_email TEXT,
+      result_token TEXT, result_date TEXT, test_type TEXT, test_limits TEXT, test_result TEXT)')
   end
   task :import do
     conn = PG.connect(host: 'postgres', password: 1234, user: 'postgres')
