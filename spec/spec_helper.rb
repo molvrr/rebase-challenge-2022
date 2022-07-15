@@ -1,5 +1,5 @@
 require './server'
-require './medicaltest'
+require './models/medicaltest'
 require 'rack/test'
 require 'rake'
 

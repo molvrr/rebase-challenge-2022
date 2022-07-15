@@ -1,28 +1,11 @@
 require 'sinatra/base'
 require 'rack/handler/puma'
-require 'sidekiq'
 require './workers/csv_worker'
-require './medicaltest'
-
-Sidekiq.configure_server do |config|
-  config.redis = {
-    host: 'redis',
-    port: ENV['REDIS_PORT'] || '6379'
-  }
-end
-
-Sidekiq.configure_client do |config|
-  config.redis = {
-    host: 'redis',
-    port: ENV['REDIS_PORT'] || '6379'
-  }
-end
+require './models/medicaltest'
 
 class Server < Sinatra::Base
   set :bind, '0.0.0.0'
-  set :server, 'puma'
   set :port, 3000
-  enable :logging
 
   get '/tests/:token' do
     data = MedicalTest.find_all(params['token'])
@@ -36,14 +19,14 @@ class Server < Sinatra::Base
   end
 
   post '/import/?' do
-    begin
-      path = params['data'][:tempfile].path
-      csv_path = "imports/#{File.basename(path)}"
-      FileUtils.cp(path, csv_path)
-      CSVJob.perform_async(csv_path)
-      201
-    rescue
-      500
+    return 400 if request.body.class != Tempfile
+
+    data = request.body.read
+    if data.length > 0
+      filename =  File.basename(request.body.to_path)
+      path = File.join('.', 'imports', "#{filename}.csv")
+      File.open(path, 'wb') { |f| f.write data }
+      CSVJob.perform_async(path)
     end
   end
 

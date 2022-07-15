@@ -1,8 +1,0 @@
-#!/bin/bash
-
-echo "Instalando gems..."
-docker run \
-  --rm \
-  -v rubygems:/usr/local/bundle/ \
-  ruby \
-  bash -c "gem install rspec pg rake rack rack-test sinatra puma" && echo "Gems instaladas com sucesso!"

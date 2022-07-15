@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker run -d -v db:/var/lib/postgresql/data --name postgres -e POSTGRES_PASSWORD=1234 --network rebase --rm -ti postgres:alpine
+docker run -d --name redis --network rebase --rm -ti redis:alpine
+docker run -d --name sidekiq -e REDIS_URL=redis://redis:6379 --network rebase --rm -ti -w /app -v $(pwd):/app -v rubygems:/usr/local/bundle ruby:3.0.0 bash -c "bundle install && bundle exec sidekiq -r ./workers/csv_worker.rb"
+docker run -d -p 3535:3535 --name sideweb -e REDIS_URL=redis://redis:6379 --network rebase --rm -ti -w /app -v $(pwd):/app -v rubygems:/usr/local/bundle ruby:3.0.0 bash -c "bundle install && bundle exec rackup -o 0.0.0.0 -p 3535"
+docker run -d --rm -e REDIS_URL=redis://redis:6379 --name rubinho --network rebase -ti -p 3000:3000 -w /app -v $(pwd):/app -v rubygems:/usr/local/bundle ruby:3.0.0 bash -c "bundle install && ruby -v server.rb"

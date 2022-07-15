@@ -1,3 +1,6 @@
+require 'sidekiq'
+require './models/medicaltest.rb'
+
 class CSVJob
   include Sidekiq::Job
 

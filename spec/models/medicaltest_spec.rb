@@ -1,5 +1,5 @@
 require 'rspec'
-require './medicaltest'
+require './models/medicaltest'
 
 describe MedicalTest do
   context '#all' do

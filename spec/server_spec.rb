@@ -47,25 +47,6 @@ describe Server do
     end
   end
 
-  context 'POST /import' do
-    it 'com sucesso' do
-      file = Rack::Test::UploadedFile.new('./data.csv', 'csv')
-      allow(CSVJob).to receive(:perform_async).and_return(true)
-
-      response = post '/import', data: file
-
-      expect(response.status).to eq(201)
-    end
-
-    it 'sem arquivo' do
-      allow(CSVJob).to receive(:perform_async).and_return(true)
-
-      response = post '/import'
-
-      expect(response.status).to eq(500)
-    end
-  end
-
   context 'GET /tests/:token' do
     it 'com sucesso' do
       data = {
