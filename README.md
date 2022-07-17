@@ -35,5 +35,15 @@ Para rodar os testes da aplicação
 $ docker exec -ti rubinho bundle exec rspec
 ```
 
+## Monitoramento de Fila
+Para utilizar o painel de monitoramento de fila é necessário uma chave de sessão, que pode ser gerada através do seguinte comando:
+```bash
+$ docker exec -ti rubinho rake generate_session_key
+```
+Logo após, o contêiner do painel pode ser iniciado:
+```bash
+$ docker compose start sideweb
+```
+
 ## API
 [Documentação](API.md)
