@@ -23,8 +23,3 @@ namespace :db do
     end
   end
 end
-
-task :generate_session_key do
-  require 'securerandom'
-  File.open(ENV['SECRET_FILE'], "w") {|f| f.write(SecureRandom.hex(32)) }
-end

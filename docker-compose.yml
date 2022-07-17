@@ -13,7 +13,6 @@ services:
       - rubygems:/usr/local/bundle
     environment:
       REDIS_URL: redis://redis:6379
-      SECRET_FILE: .session.key
     depends_on:
       - db
   db:
@@ -58,7 +57,6 @@ services:
       - rubygems:/usr/local/bundle
     environment:
       REDIS_URL: redis://redis:6379
-      SECRET_FILE: .session.key
     depends_on:
       - sidekiq
 
