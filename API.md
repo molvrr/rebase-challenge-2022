@@ -80,7 +80,7 @@ Retorna todos exames referentes ao token informado
 ## POST /import
 Endpoint para envio de CSV com dados de exames
 
-O cabeçalho do CSV deve estar na seguinte ordem:
+O cabeçalho do CSV deve estar na seguinte ordem (utilizando ponto e vírgula como separador):
 
 |cpf|nome paciente|email paciente|data nascimento paciente|endereço/rua paciente|cidade paciente|estado patiente|crm médico|crm médico estado|nome médico|email médico|token resultado exame|data exame|tipo exame|limites tipo exame|resultado tipo exame|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
