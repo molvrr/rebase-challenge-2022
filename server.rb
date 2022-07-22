@@ -1,5 +1,6 @@
 require 'sinatra/base'
 require 'rack/handler/puma'
+require 'securerandom'
 require './workers/csv_worker'
 require './models/medicaltest'
 
@@ -9,9 +10,10 @@ class Server < Sinatra::Base
 
   get '/tests/:token' do
     data = MedicalTest.find_all(params['token'])
-    return data.to_json if data
 
-    404
+    return 404 unless data
+
+    data.to_json
   end
 
   get '/tests/?' do
@@ -19,15 +21,14 @@ class Server < Sinatra::Base
   end
 
   post '/import/?' do
-    return 400 if request.body.class != Tempfile
-
     data = request.body.read
-    if data.length > 0
-      filename =  File.basename(request.body.to_path)
-      path = File.join('.', 'imports', "#{filename}.csv")
-      File.open(path, 'wb') { |f| f.write data }
-      CSVJob.perform_async(path)
-    end
+
+    return 400 unless data.length > 0
+
+    filename = SecureRandom.hex(12)
+    path = File.join('.', 'imports', "#{filename}.csv")
+    File.open(path, 'wb') { |f| f.write data }
+    CSVJob.perform_async(path)
   end
 
   run! if app_file == $0

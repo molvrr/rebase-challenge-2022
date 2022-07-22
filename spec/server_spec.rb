@@ -92,4 +92,23 @@ describe Server do
       expect(response.status).to eq(404)
     end
   end
+
+  context 'POST /import' do
+    it 'com sucesso' do
+      file = File.open('./data_test.csv', 'r')
+      allow(CSVJob).to receive(:perform_async).and_return(true)
+
+      response = post '/import', data: file.read
+
+      expect(response.status).to eq(200)
+    end
+
+    it 'sem arquivo' do
+      allow(CSVJob).to receive(:perform_async).and_return(false)
+
+      response = post '/import'
+
+      expect(response.status).to eq(400)
+    end
+  end
 end
